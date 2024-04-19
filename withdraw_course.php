@@ -55,6 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['course_id'])) {
     // 删除学生课程表中的课程记录
     $withdraw_query = "DELETE FROM student_courses WHERE student_id = '$student_id' AND course_id = '$course_id'";
     mysqli_query($conn, $withdraw_query) or die('MySQL query error');
+	
+	// 更新课程的已选人数
+    $update_enrollment_query = "UPDATE courses SET selected_count = selected_count - 1 WHERE course_id = '$course_id'";
+    mysqli_query($conn, $update_enrollment_query) or die('MySQL query error');
     
     // 显示成功消息
     echo "成功退选课程！";
