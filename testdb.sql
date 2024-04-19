@@ -15,30 +15,32 @@ CREATE TABLE `courses` (
   `day_of_week` int(11) NOT NULL,
   `time_slot` int(11) NOT NULL,
   `required` tinyint(1) NOT NULL DEFAULT 0,
-  `grade` int(11) DEFAULT NULL
+  `grade` int(11) NOT NULL,
+  `selected_count` int(11) NOT NULL DEFAULT 0,
+  `capacity` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `courses` (`course_id`, `course_name`, `credits`, `day_of_week`, `time_slot`, `required`, `grade`) VALUES
-(1, '计算机科学', 3, 3, 2, 1, 1),
-(2, '数学', 4, 5, 4, 0, 2),
-(3, '英语', 2, 3, 2, 0, 1),
-(4, '物理学', 3, 4, 3, 0, 2),
-(5, '化学', 3, 2, 6, 0, 1),
-(6, '历史', 3, 5, 2, 1, 2),
-(7, '地理', 3, 1, 3, 0, 3),
-(8, '生物学', 4, 3, 5, 0, 3),
-(9, '经济学', 3, 2, 1, 1, 2),
-(10, '计量学', 3, 4, 4, 0, 1),
-(11, '政治学', 3, 5, 3, 1, 2),
-(12, '哲学', 2, 1, 2, 0, 1),
-(13, '心理学', 3, 3, 3, 1, 2),
-(14, '语言学', 3, 2, 2, 0, 1),
-(15, '文学', 3, 4, 5, 1, 3),
-(16, '艺术史', 3, 5, 4, 0, 2),
-(17, '音乐', 2, 1, 1, 0, 4),
-(18, '舞蹈', 2, 3, 6, 0, 1),
-(19, '体育', 1, 2, 4, 0, 2),
-(20, '美术', 2, 4, 2, 0, 1);
+INSERT INTO `courses` (`course_id`, `course_name`, `credits`, `day_of_week`, `time_slot`, `required`, `grade`, `selected_count`, `capacity`) VALUES
+(1, '计算机科学', 30, 3, 2, 1, 1, 0, 0),
+(2, '数学', 4, 5, 4, 0, 2, 0, 0),
+(3, '英语', 2, 3, 2, 0, 1, 0, 1),
+(4, '物理学', 3, 4, 3, 0, 2, 0, 0),
+(5, '化学', 3, 2, 6, 0, 1, 0, 1),
+(6, '历史', 3, 5, 2, 1, 2, 0, 0),
+(7, '地理', 3, 1, 3, 0, 3, 0, 0),
+(8, '生物学', 4, 3, 5, 0, 3, 0, 0),
+(9, '经济学', 3, 2, 1, 1, 2, 0, 0),
+(10, '计量学', 3, 4, 4, 0, 1, 0, 0),
+(11, '政治学', 3, 5, 3, 1, 2, 0, 0),
+(12, '哲学', 2, 1, 2, 0, 1, 0, 0),
+(13, '心理学', 3, 3, 3, 1, 2, 0, 0),
+(14, '语言学', 3, 2, 2, 0, 1, 0, 0),
+(15, '文学', 3, 4, 5, 1, 3, 0, 0),
+(16, '艺术史', 3, 5, 4, 0, 2, 0, 0),
+(17, '音乐', 2, 1, 1, 0, 4, 0, 0),
+(18, '舞蹈', 2, 3, 6, 0, 1, 0, 0),
+(19, '体育', 1, 2, 4, 0, 2, 0, 0),
+(20, '美术', 2, 4, 2, 0, 1, 0, 0);
 
 CREATE TABLE `course_department` (
   `course_id` int(11) NOT NULL,
@@ -81,6 +83,11 @@ CREATE TABLE `follow_list` (
   `student_id` varchar(50) NOT NULL,
   `course_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `follow_list` (`student_id`, `course_id`) VALUES
+('D1150416', 3),
+('D1150416', 14),
+('D1150416', 20);
 
 CREATE TABLE `students` (
   `student_id` varchar(50) NOT NULL,
