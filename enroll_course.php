@@ -35,16 +35,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['course_id'])) {
         $total_credits_row = mysqli_fetch_assoc($total_credits_result);
         $total_credits = $total_credits_row['total_credits'];
 
-        // 查询课程学分
-        $course_info_query = "SELECT * FROM courses WHERE course_id = '$course_id'";
-        $course_info_result = mysqli_query($conn, $course_info_query) or die('MySQL query error');
-        $course_info = mysqli_fetch_assoc($course_info_result);
-        $credits = $course_info['credits'];
+        // 查询课程学分和已选人数
+		$course_info_query = "SELECT credits, selected_count, capacity FROM courses WHERE course_id = '$course_id'";
+		$course_info_result = mysqli_query($conn, $course_info_query) or die('MySQL query error');
+		$course_info = mysqli_fetch_assoc($course_info_result);
+		$credits = $course_info['credits'];
+		$selected_count = $course_info['selected_count'];
+		$capacity = $course_info['capacity'];
 
         // 检查总学分是否超过30
         if (($total_credits + $credits) > 30) {
             // 如果超过30学分，显示消息
             echo "您已选修的课程总学分超过30学分，无法再选修该课程。";
+
+            // 重定向到课程选择页面
+            echo "<script>setTimeout(function(){ window.location.href = 'course_selection.php'; }, 1000);</script>";
+        } elseif ($selected_count >= $capacity) {
+            // 如果课程已满，显示消息
+            echo "该课程已达到人数上限，无法选择。";
 
             // 重定向到课程选择页面
             echo "<script>setTimeout(function(){ window.location.href = 'course_selection.php'; }, 1000);</script>";
@@ -70,7 +78,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['course_id'])) {
                 // 重定向到课程选择页面
                 echo "<script>setTimeout(function(){ window.location.href = 'course_selection.php'; }, 1000);</script>";
             } else {
-                // 如果未超过30学分且不存在时间冲突的课程，则执行加选操作
+                // 如果未超过30学分且未满人数且不存在时间冲突的课程，则执行加选操作
+                // 更新课程的已选人数
+                $update_enrollment_query = "UPDATE courses SET selected_count = selected_count + 1 WHERE course_id = '$course_id'";
+                mysqli_query($conn, $update_enrollment_query) or die('MySQL query error');
+
                 // 将课程从关注列表中移除
                 $unfollow_query = "DELETE FROM follow_list WHERE student_id = '$student_id' AND course_id = '$course_id'";
                 mysqli_query($conn, $unfollow_query) or die('MySQL query error');
@@ -80,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['course_id'])) {
                 mysqli_query($conn, $enroll_query) or die('MySQL query error');
 
                 // 成功选课消息
-                echo "成功選課!";
+                echo "成功选课!";
 
                 // 重定向到课程选择页面
                 echo "<script>setTimeout(function(){ window.location.href = 'course_selection.php'; }, 1000);</script>";
@@ -88,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['course_id'])) {
         }
     } else {
         // 如果已经选过该课程，则显示消息
-        echo "已選過該課程";
+        echo "已选过该课程";
 
         // 重定向到课程选择页面
         echo "<script>setTimeout(function(){ window.location.href = 'course_selection.php'; }, 1000);</script>";
