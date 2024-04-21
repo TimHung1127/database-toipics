@@ -18,5 +18,6 @@
         <input type="number" id="grade" name="grade" min="1" max="4" required><br><br>
         <input type="submit" value="Register">
     </form>
+	<p>Already have an account?<a href="index.php">Login</a></p>
 </body>
 </html>

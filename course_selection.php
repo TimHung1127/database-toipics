@@ -62,7 +62,7 @@ $student_grade_result = mysqli_query($conn, $student_grade_query) or die('MySQL 
 $row = mysqli_fetch_assoc($student_grade_result);
 $student_grade = $row['grade'];
 
-// 获取可选课程表，排除已选课程并且只选择同一年级的课程
+// 獲取可選課表
 $available_courses_query = "SELECT DISTINCT courses.course_id, courses.course_name 
                             FROM courses 
                             INNER JOIN course_department ON courses.course_id = course_department.course_id 
@@ -119,10 +119,10 @@ $available_courses_result = mysqli_query($conn, $available_courses_query) or die
                 <input type='hidden' name='action' value='unfollow'>
                 <input type='submit' value='Unfollow'>
               </form>
-              <form name='withdraw_form' action='enroll_course.php' method='POST'>
+              <form name='enroll_form' action='enroll_course.php' method='POST'>
                 <input type='hidden' name='course_id' value='" . $row['course_id'] . "'>
-                <input type='hidden' name='action' value='withdraw'>
-                <input type='submit' value='Withdraw'>
+                <input type='hidden' name='action' value='enroll'>
+                <input type='submit' value='Enroll'>
               </form>
             </li>";
     }
@@ -150,8 +150,5 @@ $available_courses_result = mysqli_query($conn, $available_courses_query) or die
 </form>
 
 <br>
-
-<!-- 登出 -->
-<a href="logout.php">Logout</a>
 </body>
 </html>

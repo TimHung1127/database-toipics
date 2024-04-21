@@ -28,19 +28,18 @@
 <div class="navbar">
     <a href="course_selection.php">Course Selection</a>
     <a href="schedule.php">My Course Schedule</a>
-    <a href="logout.php">Logout</a> <!-- 添加 Logout 按钮，链接到 logout.php 文件 -->
+    <a href="logout.php">Logout</a>
 </div>
 
 <?php
 session_start();
 
-// 检查是否登录
+// 檢查是否登入
 if (!isset($_SESSION['student_id'])) {
     header("Location: index.php");
     exit();
 }
 
-// 连接数据库
 $dbhost = '127.0.0.1';
 $dbuser = 'hj';
 $dbpass = 'test1234';
@@ -49,13 +48,13 @@ $conn = mysqli_connect($dbhost, $dbuser, $dbpass) or die('Error with MySQL conne
 mysqli_query($conn, "SET NAMES 'utf8'");
 mysqli_select_db($conn, $dbname);
 
-// 获取学生ID
+// 獲取ID
 $student_id = $_SESSION['student_id'];
 
-// 定义星期几的数字值
-$days_of_week = array(1, 2, 3, 4, 5); // 星期一到星期五分别对应数字 1 到 5
+// 定義星期
+$days_of_week = array(1, 2, 3, 4, 5);
 
-// 计算已选学分
+// 計算已選學分
 $total_credits_query = "SELECT SUM(courses.credits) AS total_credits
                         FROM student_courses
                         INNER JOIN courses ON student_courses.course_id = courses.course_id
@@ -64,13 +63,13 @@ $total_credits_result = mysqli_query($conn, $total_credits_query) or die('MySQL 
 $row = mysqli_fetch_assoc($total_credits_result);
 $total_credits = $row['total_credits'];
 
-// 输出已选学分
+// 輸出已選學分
 echo "<h2>Total Credits: " . $total_credits . "</h2>";
 
-// 输出课程表
+// 輸出課表
 echo "<h2>My Course Schedule</h2>";
 foreach ($days_of_week as $day) {
-	// 查询已选课程信息
+	// 查詢已選課程
 	$course_schedule_query = "SELECT student_courses.course_id, courses.course_name, courses.day_of_week, courses.time_slot
 							  FROM student_courses
 							  INNER JOIN courses ON student_courses.course_id = courses.course_id
@@ -79,7 +78,7 @@ foreach ($days_of_week as $day) {
 							  ORDER BY courses.time_slot";
     $course_schedule_result = mysqli_query($conn, $course_schedule_query) or die('MySQL query error');
 
-    // 输出星期几的课程表
+    // 輸出星期
     echo "<h3>";
     switch ($day) {
         case 1:
@@ -105,7 +104,7 @@ foreach ($days_of_week as $day) {
     echo "<ul>";
 	
     while ($row = mysqli_fetch_assoc($course_schedule_result)) {
-        echo "<li>" . $row['time_slot'] . ": " . $row['course_name'] . " <form name='withdraw_form' action='withdraw_course.php' method='POST'>
+         echo "<li>" . $row['time_slot'] . ": " . $row['course_name'] . " (Course ID: " . $row['course_id'] . ") <form name='withdraw_form' action='withdraw_course.php' method='POST'>
                 <input type='hidden' name='course_id' value='" . $row['course_id'] . "'>
                 <input type='submit' value='Withdraw'>
               </form></li>";
@@ -113,7 +112,6 @@ foreach ($days_of_week as $day) {
     echo "</ul>";
 }
 
-// 关闭数据库连接
 mysqli_close($conn);
 ?>
 </body>
